@@ -1,10 +1,11 @@
 *** Settings ***
-Documentation       An Assistant Robot.
+Documentation       Assistant bot that uses RPA.OpenAI library. 
 Library             OperatingSystem
 Library             RPA.Assistant
 Library             RPA.OpenAI
 Library             RPA.Robocorp.Vault
 Library             RPA.Desktop
+Library             RPA.HTTP
 
 *** Variables ***
 ${counter}    1
@@ -14,26 +15,25 @@ Main
     [Documentation]
     ...    The Main task running the Assistant
     ...    Configure your window behaviour here   
-
     Get Secrets and Authorize to OpenAI
     Display Main Menu
     ${result}=    RPA.Assistant.Run Dialog
     ...    title=Robocorp
     ...    on_top=True
-    ...    height=510
+    ...    height=520
 
 *** Keywords ***
 Get Secrets and Authorize to OpenAI
     ${secrets}   Get Secret   OpenAI
-    Set Global Variable    ${secrets}
     Authorize To Openai    ${secrets}[key]
 
 Display Main Menu
     Clear Dialog
     Add Heading    Robocorp - OpenAI Assistant
     Add Text    Available Actions:
-    Add Button    OpenAI text Completion    Text Completion Window
-    Add Button    DALL-E images    Image Create Window
+    Add Button    Create OpenAI text Completion    Text Completion Window
+    Add Button    Create DALL-E images    Image Create Window
+    Add image   url_or_path=volvo.png   width=102  height=102
     Add Submit Buttons    buttons=Close    default=Close
 
 Back To Main Menu
@@ -62,14 +62,14 @@ Image Create Window
     ...    name=size
     ...    options=256x256,512x512,1024x1024
     ...    default=512x512
-    ...    label=Image Size
+    ...    label=Image Size      
+    Add checkbox    name=download     label=Download images    default=False
     Add Next Ui Button    Create     Create a Image   
     Add Next Ui Button    Back    Back To Main Menu
     Refresh Dialog
 
 Create a Completion
     [Arguments]   ${form}
-    Log To Console    ${form}
     ${completion_from_openai}   Completion Create    ${form}[prompt_input]
     Clear Dialog
     Add Heading    Text Completion
@@ -86,8 +86,9 @@ Create a Image
     FOR    ${url}    IN    @{image_urls}
         Add link    ${url}   Image ${counter}   
         ${counter}   Evaluate    ${counter}+1
+        IF    '${form}[download]' == 'true'
+            Download   ${url}    
+        END
     END
     Add Next Ui Button    Back    Back To Main Menu
     Refresh Dialog
-
-
