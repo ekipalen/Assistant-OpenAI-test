@@ -1,4 +1,4 @@
-# Robocorp RPA.Assistant with OpenAI demo
+# Robocorp RPA.Assistant and OpenAI
 
 This robot uses RPA.Assistant library and provides a way to display information to a user and request input while a robot is running. Robot also uses the RPA.OpenAI library.
 
