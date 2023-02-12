@@ -24,8 +24,10 @@ Main
 
 *** Keywords ***
 Get Secrets and Authorize to OpenAI
+    # Get the OpenAI API key from Robocorp Vault.
     ${secrets}   Get Secret   OpenAI
-    Authorize To Openai    ${secrets}[key]
+    # For testing it is possible to use your API key directly here but it would be bad for security.
+    Authorize To Openai   api_key=${secrets}[key]
 
 Display Main Menu
     Clear Dialog
@@ -33,7 +35,6 @@ Display Main Menu
     Add Text    Available Actions:
     Add Button    Create OpenAI text Completion    Text Completion Window
     Add Button    Create DALL-E images    Image Create Window
-    Add image   url_or_path=volvo.png   width=102  height=102
     Add Submit Buttons    buttons=Close    default=Close
 
 Back To Main Menu
