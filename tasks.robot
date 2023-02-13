@@ -20,7 +20,8 @@ Main
     ${result}=    RPA.Assistant.Run Dialog
     ...    title=Robocorp
     ...    on_top=True
-    ...    height=520
+    ...    height=540
+    ...    width=600
 
 *** Keywords ***
 Get Secrets and Authorize to OpenAI
@@ -75,7 +76,7 @@ Create a Completion
     Clear Dialog
     Add Heading    Text Completion
     Add text    ${completion_from_openai}
-    Add Button    Copy response to clipboard    Set clipboard value   ${completion_from_openai}
+    Add Button    Copy to clipboard    Set clipboard value   ${completion_from_openai}
     Add Next Ui Button    Back    Back To Main Menu
     Refresh Dialog
 
@@ -83,9 +84,11 @@ Create a Image
     [Arguments]   ${form}
     ${image_urls}    Image Create     prompt=${form}[image_input]   size=${form}[size]   num_images=${form}[num]
     Clear Dialog
-    Add Heading    DALL-E Image   size=Small
+    Add Heading    DALL-E Images   size=Small
     FOR    ${url}    IN    @{image_urls}
-        Add link    ${url}   Image ${counter}   
+        ${width}   Get Image Width    ${form}[size]
+        Add image   ${url}   width=${width}
+        Add link    ${url}   Open Image in default browser   
         ${counter}   Evaluate    ${counter}+1
         IF    '${form}[download]' == 'true'
             Download   ${url}    
@@ -93,3 +96,12 @@ Create a Image
     END
     Add Next Ui Button    Back    Back To Main Menu
     Refresh Dialog
+
+Get Image Width
+    [Arguments]   ${size}
+    IF    '${size}' == '256x256'
+        ${width}   Set Variable   256
+    ELSE
+        ${width}   Set Variable   512
+    END
+    [Return]   ${width}
