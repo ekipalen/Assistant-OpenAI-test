@@ -4,7 +4,7 @@ This robot uses RPA.Assistant library and provides a way to display information 
 
 > The robot provides user a way to create text completions and images with OpenAI. OpenAI account and API key is required to use OpenAI API. 
 
-<img src="images/assistant.png" style="margin-bottom:20px">
+https://github.com/ekipalen/Assistant-OpenAI-test/blob/main/images/Assistant_vid.mp4
 
 ## Learning materials
 
